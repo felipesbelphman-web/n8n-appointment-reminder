@@ -10,6 +10,12 @@ Appointment reminder automation built with **n8n, Google Sheets and Microsoft Ou
 4. Sends a personalized email through Outlook.
 5. Matches the row by `appointment_id` and changes only `reminder_sent` to `YES`.
 
+## Business problem
+
+Appointment-based businesses often send reminders manually, which takes time and can lead to missed follow-ups.
+
+This project automates next-day email reminders and records their status in Google Sheets, reducing manual work and helping clients remember their appointments.
+
 ## Files
 
 - `appointment-reminder.json`: sanitized workflow template, inactive on import.
