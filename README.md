@@ -1,5 +1,11 @@
 # Appointment Reminder
 
+## Business problem
+
+Appointment-based businesses often send reminders manually, which takes time and can lead to missed follow-ups.
+
+This project automates next-day email reminders and records their status in Google Sheets, reducing manual work and helping clients remember their appointments.
+
 Appointment reminder automation built with **n8n, Google Sheets and Microsoft Outlook**. Designed for appointment-based businesses such as salons and barbershops.
 
 ## How it works
@@ -9,13 +15,7 @@ Appointment reminder automation built with **n8n, Google Sheets and Microsoft Ou
 3. Keeps rows where the appointment is tomorrow **AND** `reminder_sent` is `NO`.
 4. Sends a personalized email through Outlook.
 5. Matches the row by `appointment_id` and changes only `reminder_sent` to `YES`.
-
-## Business problem
-
-Appointment-based businesses often send reminders manually, which takes time and can lead to missed follow-ups.
-
-This project automates next-day email reminders and records their status in Google Sheets, reducing manual work and helping clients remember their appointments.
-
+6. 
 ## Files
 
 - `appointment-reminder.json`: sanitized workflow template, inactive on import.
@@ -45,6 +45,8 @@ The sanitized template was checked as JSON; it must be configured and tested in 
 ## Scope and limitations
 
 This version sends email reminders; WhatsApp is a future enhancement. No AI model is required.
+
+The YES flag prevents repeat reminders after a successful update. Overlapping executions or a spreadsheet update failure after sending may still cause duplicates.
 
 ## Screenshots
 
