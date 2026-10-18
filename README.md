@@ -43,24 +43,13 @@ This version sends email reminders; WhatsApp is a future enhancement. No AI mode
 ## Screenshots
 
 ### Workflow overview
-Complete automation with manual testing and daily scheduling.
-
-![Workflow overview](images/01-workflow-overview.png)
+![Workflow overview](01-workflow-overview.png)
 
 ### Appointment tracking
-Google Sheets records the reminder status after sending.
-
-![Appointment tracking](images/02-appointment-tracking.png)
+![Appointment tracking](02-appointment-tracking.png)
 
 ### Email reminder
-Personalized email with the appointment details.
-
-![Email reminder](images/03-email-reminder.png)
+![Email reminder](03-email-reminder.png)
 
 ### Duplicate prevention
-The filter discards appointments already marked as sent.
-
-![Duplicate prevention](images/04-duplicate-prevention.png)
-The `YES` flag avoids repeat sends during normal sequential runs after a successful update. It is not an exactly-once guarantee: overlapping runs or a sheet update failure after an email is sent can cause duplicates. Outlook accepting a message does not guarantee final delivery. Rescheduled appointments need their flag reset to `NO`. Cancellation handling is not included.
-
-The public template contains no original credential references, spreadsheet IDs, instance metadata, or pinned customer data. Configure your own connections after import.
+![Duplicate prevention](04-duplicate-prevention.png)
