@@ -92,3 +92,13 @@ These screenshots show the original workflow version; refresh them to show v1.3 
 
 ### Repeat-send filtering
 ![Repeat-send filtering](04-duplicate-prevention.png)
+
+### Error notification workflow
+Separate workflow that receives execution errors and sends an Outlook alert.
+
+![Error notification workflow](05-error-alert-workflow.png)
+
+### Error alert email
+Test alert showing the workflow, failed node and error message.
+
+![Error alert email](06-error-alert-email.png)
