@@ -82,7 +82,7 @@ The final restored-data path was checked with ten records and no eligible sends.
 These screenshots show the original workflow version; refresh them to show v1.3 validation nodes and diagnostics.
 
 ### Workflow overview
-![Workflow overview](01-workflow-overview.png)
+![Workflow overview](01-workflow-overview-v1.3.png)
 
 ### Appointment tracking
 ![Appointment tracking](02-appointment-tracking.png)
