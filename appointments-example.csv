@@ -1,2 +1,6 @@
-appointment_id,name,email,service,appointment_date,appointment_time,reminder_sent
-APT-001,Alex,alex@example.com,Haircut,2026-10-19,14:00,NO
+appointment_id,name,email,service,appointment_date,appointment_time,reminder_sent,validation_status,validation_errors
+APT-001,Alex,alex@example.com,Haircut,2026-10-20,14:00,NO,,
+APT-002,Missing Email,,Haircut,2026-10-20,15:00,NO,,
+APT-003,Invalid Date,alex@example.com,Haircut,invalid-date,16:00,NO,,
+APT-004,Duplicate A,alex@example.com,Haircut,2026-10-20,17:00,NO,,
+APT-004,Duplicate B,alex@example.com,Haircut,2026-10-20,18:00,NO,,

@@ -1,0 +1,52 @@
+{
+  "name": "Automation Error Alerts",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        32
+      ],
+      "id": "02e39920-2870-4f96-adbe-632c71a43906",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "toRecipients": "recipient@example.com",
+        "subject": "={{ 'Automation failed: ' + ($json.workflow?.name || 'Unknown workflow') }}",
+        "bodyContent": "={{ 'An automation needs attention.\\n\\nWorkflow: ' + ($json.workflow?.name || 'Unknown') + '\\nFailed node: ' + ($json.execution?.lastNodeExecuted || 'Not available') + '\\nError: ' + ($json.execution?.error?.message || $json.trigger?.error?.message || 'No details available') + '\\nExecution: ' + ($json.execution?.url || 'Not available') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        224,
+        32
+      ],
+      "id": "8f076d8d-6ccc-4129-83fb-996084003ad3",
+      "name": "Send a message"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "tags": []
+}

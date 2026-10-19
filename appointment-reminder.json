@@ -17,10 +17,7 @@
         "rule": {
           "interval": [
             {
-              "field": "days",
-              "daysInterval": 1,
-              "triggerAtHour": 9,
-              "triggerAtMinute": 0
+              "triggerAtHour": 9
             }
           ]
         }
@@ -86,6 +83,16 @@
                 "operation": "equals",
                 "name": "filter.operator.equals"
               }
+            },
+            {
+              "id": "ab423ac1-56ab-4292-9237-64ef2ff620d9",
+              "leftValue": "={{ $json.validation_valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -95,7 +102,7 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        432,
+        1104,
         96
       ],
       "id": "1cc6d321-416d-4adf-9072-ce98804b0a8d",
@@ -111,7 +118,7 @@
       "type": "n8n-nodes-base.microsoftOutlook",
       "typeVersion": 2,
       "position": [
-        656,
+        1328,
         96
       ],
       "id": "e0c7aaea-d5ec-4bee-ba34-8906a81ca7cc",
@@ -229,11 +236,175 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        880,
+        1552,
         96
       ],
       "id": "e3f3ffd4-e55c-4ccb-8218-9b5dd3847923",
       "name": "Mark Reminder as Sent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst idCounts = new Map();\n\nfor (const item of items) {\n  const id = String(item.json.appointment_id ?? '').trim();\n\n  if (id) {\n    idCounts.set(id, (idCounts.get(id) ?? 0) + 1);\n  }\n}\n\nreturn items.map((item, index) => {\n  const data = item.json;\n  const errors = [];\n\n  const id = String(data.appointment_id ?? '').trim();\n  const email = String(data.email ?? '').trim();\n  const date = String(data.appointment_date ?? '').trim();\n\n  if (!id) {\n    errors.push('Missing appointment ID');\n  } else if (idCounts.get(id) > 1) {\n    errors.push('Duplicate appointment ID');\n  }\n\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {\n    errors.push('Missing or invalid email');\n  }\n\n  const parsedDate = DateTime.fromISO(date, {\n    zone: 'Europe/Dublin',\n  });\n\n  if (\n    !/^\\d{4}-\\d{2}-\\d{2}$/.test(date) ||\n    !parsedDate.isValid ||\n    parsedDate.toFormat('yyyy-MM-dd') !== date\n  ) {\n    errors.push('Missing or invalid appointment date');\n  }\n\n  return {\n    json: {\n      ...data,\n      email,\n      appointment_date: date,\n      validation_valid: errors.length === 0,\n      validation_errors: errors.join('; '),\n    },\n    pairedItem: { item: index },\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        96
+      ],
+      "id": "82f31fc0-4dd2-4635-984f-cc9173b4d04c",
+      "name": "Validate Appointments"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Appointments",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "validation_status": "={{ $json.validation_valid ? 'VALID' : 'INVALID' }}",
+            "validation_errors": "={{ $json.validation_errors }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "appointment_id",
+              "displayName": "appointment_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "appointment_date",
+              "displayName": "appointment_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "appointment_time",
+              "displayName": "appointment_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "reminder_sent",
+              "displayName": "reminder_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "validation_status",
+              "displayName": "validation_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "validation_errors",
+              "displayName": "validation_errors",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        656,
+        96
+      ],
+      "id": "a2925cc0-70b3-47ce-b448-9fbd42b4ec60",
+      "name": "Save Validation Results"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((item, index) => {\n  const appointment =\n    $('Validate Appointments').itemMatching(index).json;\n\n  return {\n    json: {\n      ...appointment,\n      validation_status: item.json.validation_status,\n      validation_errors: item.json.validation_errors,\n    },\n    pairedItem: { item: index },\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        96
+      ],
+      "id": "21b242ac-56f7-4a61-a65c-84cffcdd053e",
+      "name": "Restore Appointment Data"
     }
   ],
   "pinData": {},
@@ -264,7 +435,7 @@
       "main": [
         [
           {
-            "node": "Filter Pending Reminders",
+            "node": "Validate Appointments",
             "type": "main",
             "index": 0
           }
@@ -287,6 +458,39 @@
         [
           {
             "node": "Mark Reminder as Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Appointments": {
+      "main": [
+        [
+          {
+            "node": "Save Validation Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Validation Results": {
+      "main": [
+        [
+          {
+            "node": "Restore Appointment Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Appointment Data": {
+      "main": [
+        [
+          {
+            "node": "Filter Pending Reminders",
             "type": "main",
             "index": 0
           }
